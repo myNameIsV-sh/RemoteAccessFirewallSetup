@@ -1,6 +1,15 @@
+## Índice
+
+1. [Preparando o ambiente](#preparando-o-ambiente)  
+   1.1. [Primeiros Passos](#primeiros-passos)  
+   1.2. [Criando um contêiner básico](#criando-um-contêiner-básico)  
+   1.3. [Permissões de Rede](#permissões-de-rede)
+
+   
 # 1. Preparando o ambiente
 Não serei tão detalhista nessa parte, portanto é esperado que você já tenha o `docker` instalado, caso ainda não tenha, recomendo a leitura da documentação oficial do Docker disponível em: https://docs.docker.com/get-started/get-docker/ 
 
+## 1.1 Primeiros passos 
 Para a atividade de hoje iremos o Ubuntu 24.04 "Noble Numbat" como base, para isso basta executar o comando abaixo:
 
 ```text
@@ -30,7 +39,7 @@ ubuntu:24.04    c4a8d5503dfb        119MB         31.7MB
 
 Com tudo pronto, podemos prosseguir para a execução do contêiner.
 
-## 1.2 Executando o contêiner 
+## 1.2 Criando um contêiner básico 
 Existem diversas formas para executar um contêiner, abordarei a maneira mais granular disponível. Primeiramente, criaremos o contêiner com o comando `docker create`, é importante destacar que, uma vez criado, não é possível ceder novas permissões para o contêiner, essa informação será importante lá na frente quando formos lidar com firewall. 
 
 A maneira mais básica para criar um contêiner é essa
@@ -41,7 +50,6 @@ docker create -it --name meu-container ubuntu:24.04 /bin/bash
 
 O parâmetro `it` significa *interactive teletypewriter*, entenda como terminal interativo, `--name` como sugere define o nome do contêiner, é importante reservar um nome significativo pois o terminal consegue preencher automaticamente o nome do contêiner pressionando `tab`. Especificamos a imagem que queremos executar e também específicamos o interpretador de comandos para o contêiner, nesse ccaso estamos utilizando o `bash`.
 
-> Atenção
 > Nota: Este é um exemplo de criação básica. Como iremos lidar com rede, precisaremos destruir este contêiner e recriá-lo com permissões de rede específicas que veremos mais adiante.
 
 Após a execução do comando, o seu terminal irá retornar o `CONTAINER ID` do contêiner, indicado que o contêiner foi criado com sucesso.
@@ -87,3 +95,5 @@ UBUNTU_CODENAME=noble
 LOGO=ubuntu-logo
 root@cac44711b105:/# 
 ```
+
+## 1.3 Permissões de Rede
