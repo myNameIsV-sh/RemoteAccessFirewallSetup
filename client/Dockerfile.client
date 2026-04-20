@@ -1,0 +1,8 @@
+FROM ubuntu:24.04
+
+RUN apt update -y && apt install -y \
+    openssh-client \
+    iputils-ping \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD ["/bin/bash"]
