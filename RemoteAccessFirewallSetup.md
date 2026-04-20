@@ -1,12 +1,11 @@
 # Índice
 
-1. [Preparando o ambiente](#preparando-o-ambiente)  
-   1.1. [Primeiros Passos](#primeiros-passos)  
-   1.2. [Criando um contêiner básico](#criando-um-contêiner-básico)  
-   1.3. [Permissões de Rede](#permissões-de-rede)  
-   1.4. [Instalando pacotes](#instalando-pacotes)  
-   1.5. [Iniciando os serviços](#iniciando-os-serviços)  
-   1.6. [Configurando serviços](#configurando-serviços)  
+1. [Preparando o ambiente](#1-preparando-o-ambiente)  
+   1.1. [Primeiros Passos](#11-primeiros-passos)  
+   1.2. [Criando um contêiner básico](#12-criando-um-contêiner-básico)  
+   1.3. [Instalando pacotes](#13-instalando-pacotes)  
+   1.4. [Iniciando os serviços](#14-iniciando-os-serviços)  
+   1.5. [Configurando serviços](#15-configurando-serviços)  
 2. [Considerações Finais](#considerações-finais)
 
    
@@ -100,7 +99,7 @@ LOGO=ubuntu-logo
 root@cac44711b105:/# 
 ```
 
-## 1.4 Instalando pacotes
+## 1.3 Instalando pacotes
 Dentro do contêiner, podemos instalar os pacotes desejados. Precisamos instalar o `ufw` e o `ssh`; para isso, vamos atualizar a lista de pacotes e em seguida instalar o que precisamos. Como estamos utilizando o Ubuntu, usaremos o APT (Advanced Package Tool).
 
 ```text
@@ -120,7 +119,7 @@ root@cac44711b105:/# ssh -V
 OpenSSH_9.6p1 Ubuntu-3ubuntu13.15, OpenSSL 3.0.13 30 Jan 2024
 ```
 
-## 1.5 Iniciando os serviços
+## 1.4 Iniciando os serviços
 Para ativarmos os serviços, é necessário ter algum gerenciador de processos instalado no contêiner. No entanto, essa prática é completamente desencorajada para ambientes de produção e vai contra o princípio de responsabilidade única que o Docker propõe: um contêiner executando um sistema operacional como o Ubuntu é um processo isolado, e quando instalamos o SystemD, ele precisa ser o primeiro processo em execução no sistema (PID 1) — é aí que surge um impasse. Já no caso do UFW, lidamos com outro problema: o Docker é responsável por se comunicar com o firewall do sistema hospedeiro, e utilizar o UFW dentro de um contêiner requer permissões especiais para manipular tabelas de endereços IP e portas, tornando a execução do contêiner mais insegura. Como estamos em um ambiente didático e controlado, iremos simular a execução de ambos os programas.
 
 Se tentarmos executar o comando `systemctl status`, seremos recebidos com a seguinte mensagem de erro:
@@ -212,7 +211,7 @@ Existe uma maneira mais elegante de fazer isso: utilizando o parâmetro `--now` 
 
 Na próxima seção, realizaremos algumas configurações pontuais para o SSH e o UFW.
 
-## 1.6 Configurando serviços
+## 1.5 Configurando serviços
 Com os processos devidamente inicializados e habilitados, podemos agora configurar e executar os nossos serviços. Nesta seção, iremos configurar um servidor e um cliente SSH.
 
 Como estamos em um ambiente virtual, por padrão o usuário sempre será o `root`, o que nos traz alguns problemas para acessar um servidor SSH contêinerizado. Primeiro, vamos definir uma senha para o `root` utilizando o comando `passwd`:
