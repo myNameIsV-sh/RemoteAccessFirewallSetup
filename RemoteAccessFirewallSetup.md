@@ -3,7 +3,11 @@
 1. [Preparando o ambiente](#preparando-o-ambiente)  
    1.1. [Primeiros Passos](#primeiros-passos)  
    1.2. [Criando um contêiner básico](#criando-um-contêiner-básico)  
-   1.3. [Permissões de Rede](#permissões-de-rede)
+   1.3. [Permissões de Rede](#permissões-de-rede)  
+   1.4. [Instalando pacotes](#instalando-pacotes)  
+   1.5. [Iniciando os serviços](#iniciando-os-serviços)  
+   1.6. [Configurando serviços](#configurando-serviços)  
+2. [Considerações Finais](#considerações-finais)
 
    
 ## 1. Preparando o ambiente
