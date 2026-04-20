@@ -1,4 +1,4 @@
-# Índice
+# Sumário
 
 1. [Preparando o ambiente](#1-preparando-o-ambiente)  
    1.1. [Primeiros Passos](#11-primeiros-passos)  
@@ -7,19 +7,20 @@
    1.4. [Iniciando os serviços](#14-iniciando-os-serviços)  
    1.5. [Configurando serviços](#15-configurando-serviços)  
 2. [Considerações Finais](#considerações-finais)
-
    
 ## 1. Preparando o ambiente
-Não serei tão detalhista nessa parte, portanto é esperado que você já tenha o `docker` instalado. Caso ainda não tenha, recomendo a leitura da documentação oficial do Docker disponível em: https://docs.docker.com/get-started/get-docker/ 
+**Não serão abordados detalhes técnicos ou de instalação do `docker` nesta documentação**, portanto esperamos que você já tenha o `docker` instalado e tenha um entendimento básico dos conceitos fundamentais do `docker`. Caso ainda não tenha, é extremamente recomendado consultar a documentação oficial do Docker disponível em: [Get started | Docker Docs](https://docs.docker.com/get-started/).
 
-### 1.1 Primeiros passos 
-Para a atividade de hoje, iremos utilizar o Ubuntu 24.04 "Noble Numbat" como base. Para isso, basta executar o comando abaixo:
+### 1.1 Primeiros passos
+Nesta documentação, será utilizado a versão `29.1.2, build 890dcca` do `docker` rodando em um sistema Debian Linux 13 (Trixie) com o kernel `6.12.74-2`; sabendo que não podemos vencer o tempo e é possível que no futuro alguns comandos ou programas possam ficar datados, por isso seja responsável e execute cada comando listado com cautela.
+
+Para os nossos testes, iremos utilizar o Ubuntu 24.04 "Noble Numbat" como sistema operacional base. Para isso, é preciso obter uma imagem Docker do Ubuntu por meio do comando abaixo:
 
 ```text
 docker pull ubuntu:24.04
 ```
 
-O comando acima irá baixar a imagem oficial do Ubuntu no [Docker Hub](https://hub.docker.com/_/ubuntu). Por padrão, o Docker sempre irá baixar a última versão disponível; para especificarmos a versão, basta adicionarmos uma tag seguindo a sintaxe `:<versão>`.
+O comando acima irá baixar a imagem oficial do Ubuntu no [Docker Hub](https://hub.docker.com/_/ubuntu), especificamente a versão 24.04. Caso não seja específicado, o Docker sempre irá baixar a última versão disponível por padrão, a *tag* `latest` é implícita; para especificarmos a versão, basta adicionarmos uma *tag* seguindo a sintaxe `:<versão>`.
 
 O resultado será esse:
 ```text
@@ -32,7 +33,7 @@ Status: Downloaded newer image for ubuntu:24.04
 docker.io/library/ubuntu:24.04
 ```
 
-Caso queira verificar a imagem, basta executar o comando `docker images`:
+Caso queira consultar verificar se a imagem foi baixada com êxito, basta executar o comando `docker images`:
 ```text
 v@hp-256r-g9:~/Projetos/Faculdade/RemoteAccessFirewallSetup$ docker images
                                                                                                                     i Info →   U  In Use
@@ -40,23 +41,20 @@ IMAGE           ID             DISK USAGE   CONTENT SIZE   EXTRA
 ubuntu:24.04    c4a8d5503dfb        119MB         31.7MB
 ```
 
-Com tudo pronto, podemos prosseguir para a execução do contêiner.
+Com tudo pronto, podemos prosseguir para a criação do contêiner.
 
 ### 1.2 Criando um contêiner básico 
-Existem diversas formas para executar um contêiner; abordarei a maneira mais granular disponível. Primeiramente, criaremos o contêiner com o comando `docker create`. É importante destacar que, uma vez criado, não é possível conceder novas permissões para o contêiner — essa informação será importante mais à frente, quando formos lidar com firewall.
+Existem diversas maneiras para criar e executar um contêiner; farei da maneira mais granular disponível. Primeiramente, criaremos o contêiner com o comando `docker create`. É importante destacar que, uma vez criado, **não é possível conceder novas permissões para o contêiner** — essa informação será importante mais à frente, quando formos lidar com firewall.
 
 A maneira mais básica para criar um contêiner é essa:
-
 ```bash
 docker create -it --name meu-container ubuntu:24.04 /bin/bash
 ```
-
-O parâmetro `it` significa *interactive teletypewriter*, entenda como terminal interativo. O `--name`, como sugere, define o nome do contêiner — é importante reservar um nome significativo, pois o terminal consegue preenchê-lo automaticamente ao pressionar `tab`. Especificamos também a imagem que queremos executar e o interpretador de comandos do contêiner, nesse caso o `bash`.
+O parâmetro `it` significa *interactive teletypewriter (tty)*, entenda como terminal interativo. O parâmetro `--name`, como sugere, define o nome do contêiner — é importante reservar um nome significativo, pois o terminal consegue preenchê-lo automaticamente ao pressionar `tab`. Por último, especificamos a imagem `docker` que queremos executar e o interpretador de comandos que será utilizado, nesse caso o utilizaremos o bom e velho `bash`.
 
 > Nota: Este é um exemplo de criação básica. Como iremos lidar com rede, precisaremos destruir este contêiner e recriá-lo com permissões de rede específicas, que veremos mais adiante.
 
 Após a execução do comando, o terminal irá retornar o `CONTAINER ID` do contêiner, indicando que ele foi criado com sucesso.
-
 ```text
 v@hp-256r-g9:~/Projetos/Faculdade/RemoteAccessFirewallSetup$ docker create -it --name meu-container ubuntu:24.04 /bin/bash
 cac44711b105ac2f4e7f57fb5c25ba7650a77967c2a887a200ff5a7e74e689ed
