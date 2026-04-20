@@ -209,9 +209,9 @@ Existe uma maneira mais elegante de executarmos esses serviços, utilizando o pa
 Na próxima sessão, iremos realizar algumas configurações pontuais para o SSH e UFW.
 
 ## 1.6 Configurando serviços
-Com os processos devidamente iniciliazados e habilitados, agora podermos configurar e executar os nossos serviços, primeiro, vamos configurar o SSH.
+Com os processos devidamente iniciliazados e habilitados, agora podermos configurar e executar os nossos serviços, nesta seção, iremos configurar um servidor e um cliente SSH.
 
-Como estamos em um ambiente virtual, por padrão o usuário sempre será o `root`, por conta disso, teremos alguns problemas para acessarmos um servidor ssh que esteja contêinerizado. Primeiro vamos definir uma senhas para o `root` utilizando o comando `passwd`. A sintaxe é simple:
+Como estamos em um ambiente virtual, por padrão o usuário sempre será o `root`, por conta disso, teremos alguns problemas para acessarmos um servidor ssh que esteja contêinerizado. Primeiro vamos definir uma senhas para o `root` utilizando o comando `passwd`; a sintaxe é simples:
 
 ```text
 root@cac44711b105:/# passwd root 
@@ -220,7 +220,7 @@ Retype new password:
 passwd: password updated successfully
 ```
 
-Como estamos em um ambiente didático e controlado, inseri a senha "123", mas lembre-se sempre de utilizar uma senha forte.
+> Nota: como estamos em um ambiente didático e controlado, inseri a senha "123", mas lembre-se de utilizar uma senha forte, de preferência uma frase longa.
 
 Após ter dedicado uma senha para o root, agora precisamos permitir o Login como usuário root no servidor, para isso precisamos acessar o arquivo de configuração do SSH e remover a `#` da linha `#PermitRootLogin prohibit-password` e no lugar de `prohibit-password` substituimos por `yes`. O arquivo se encontra em `/etc/ssh/sshd_config`, caso queira utilizar um editor de textos como o `nano`, `vi` lembre-se de instalá-los, ou caso queira utilizar uma opção já existente, utilize o comando `sed`.
 
@@ -230,13 +230,46 @@ root@cac44711b105:/# sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogi
 
 Após isso, reinicie o ssh com o comando `systemctl restart ssh` para que as mudanças surtam efeito.
 
+Do lado do cliente, iremos utilizar o `openssh-client`. Para realizarmos a conexão precisamos indicar o usuário que desejamos assumir e o servidor que iremos no conectar, como estamos em máquinas locais, o comando `hostname -I` já nos fornece o endereço exato para a conexão local
+
+```text
+root@cac44711b105:/# hostname -I
+172.17.0.2 
+```
+
+No contêiner do cliente, utilizamos o seguinte comando:
+
+```text
+root@b66df2f475b4:/# ssh root@172.17.0.2
+```
+
+No mesmo instante você irá se deparar com uma mensagem parecida com essa:
+
+```text
+The authenticity of host '172.17.0.2 (172.17.0.2)' can't be established.
+ED25519 key fingerprint is SHA256:abcd1234...
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+
+No momento em que você disser "Sim", uma chave do servidor será salva no arquivo `~/.ssh/known_hosts` e em seguida, o será solicitado a senha do root do servidor.
+
+```text
+root@172.17.0.2's password:
+```
+
+Inserimos "123" e *voilà*, perceba que deixamos de estar no contêiner `b66df2f475b4` e passamos para o `cac44711b105`, dessa forma, temos o total controle do servidor.
+
+Para finalizarmos, vamos ativar o firewall no lado do servidor, o processo é extremamente simples. O UFW, por padrão, ele bloqueia todas as entradas e libera todas as saídas, ou seja, a porta 22 (que é a porta padrão do SSH) será bloqueada.
+
+No contêiner do servidor, basta executar:
+
+```text
+root@cac44711b105:/# ufw enable
+```
+
+A partir desse momento, todas as conexões são bloqueadas, o cliente não consegue mais se comunicar e quando tentamos realizar uma nova conexão, seremos recebidos com um `Connection timed out`.
 
 
 
 
 
-
-
-
-
-### 1.4 Permissões de Rede
