@@ -97,6 +97,12 @@ LOGO=ubuntu-logo
 root@cac44711b105:/# 
 ```
 
+Vale mencionar que os três comandos utilizados, `create`, `start` e `exec` foram apresentados separadamente de forma intencional, para ilustrar cada etapa do ciclo de vida de um contêiner. Na prática, o `docker run` unifica todo esse processo em um único comando, criando, iniciando e acessando o contêiner de uma vez:
+```text
+docker run -it --name meu-container ubuntu:24.04 /bin/bash
+```
+Como iremos lidar com permissões de rede mais à frente, o fluxo granular com `docker create` ainda será relevante, mas é importante ter o `docker run` no seu repertório.
+
 ## 1.3 Instalando pacotes
 Dentro do contêiner, podemos instalar os pacotes desejados. Precisamos instalar o `ufw` e o `ssh`; para isso, vamos atualizar a lista de pacotes e em seguida instalar o que precisamos. Como estamos utilizando o Ubuntu, usaremos o APT (Advanced Package Tool).
 
